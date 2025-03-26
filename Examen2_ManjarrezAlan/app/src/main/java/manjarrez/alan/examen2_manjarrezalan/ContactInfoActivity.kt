@@ -1,6 +1,7 @@
 package manjarrez.alan.examen2_manjarrezalan
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
@@ -26,15 +27,8 @@ class ContactInfoActivity : AppCompatActivity() {
             findViewById<TextView>(R.id.tvContactNumberInformation).text = contact.number
             findViewById<TextView>(R.id.tvContactEmailInformation).text = contact.email
 
-            val colorMap = mapOf(
-                "blue" to R.color.blue,
-                "yellow" to R.color.yellow,
-                "purple" to R.color.purple,
-                "green" to R.color.green
-            )
-            val colorResId = colorMap[contact.color] ?: R.color.black
-            val colorInt = ContextCompat.getColor(this, colorResId)
-            findViewById<ImageView>(R.id.ivImageContactInformation).setBackgroundColor(colorInt)
+            val colorResId = Color.parseColor(contact.color)
+            findViewById<ImageView>(R.id.ivImageContactInformation).setBackgroundColor(colorResId)
 
             val callButton: Button = findViewById(R.id.btnCall)
             callButton.text = "Llamar a ${contact.name}"
