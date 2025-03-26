@@ -2,6 +2,7 @@ package manjarrez.alan.examen2_manjarrezalan
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,23 +21,26 @@ import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
     var contact = ArrayList<Contact>()
-
+    private lateinit var listView: ListView
+    private val NEW_CONTACT_REQUEST = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        val newContact: Button = findViewById(R.id.btnNewContact) as Button
+        listView = findViewById(R.id.listView)
+
+        val newContact: Button = findViewById(R.id.btnNewContact)
         newContact.setOnClickListener{
             val intent = Intent(this@MainActivity, RegisterActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent, NEW_CONTACT_REQUEST)
         }
 
         agregarContacto()
         var contactosMostrados = contact
 
-        var listView: ListView = findViewById(R.id.listView) as ListView
+
         var adaptador: AdaptadorContactos = AdaptadorContactos(this, contactosMostrados)
         listView.adapter = adaptador
 
@@ -46,6 +50,20 @@ class MainActivity : AppCompatActivity() {
             insets
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == NEW_CONTACT_REQUEST && resultCode == RESULT_OK) {
+            val newContact = data?.getSerializableExtra("newContact") as? Contact
+            newContact?.let {
+                contact.add(it)
+
+                val adaptador = listView.adapter as? AdaptadorContactos
+                adaptador?.notifyDataSetChanged()
+            }
+        }
+    }
+
 
     fun agregarContacto() {
         contact.add(
@@ -116,17 +134,12 @@ class MainActivity : AppCompatActivity() {
             val name = vista.findViewById<TextView>(R.id.tvContactName)
             val work = vista.findViewById<TextView>(R.id.tvContactWork)
 
-            val colorMap = mapOf(
-                "blue" to R.color.blue,
-                "yellow" to R.color.yellow,
-                "purple" to R.color.purple,
-                "green" to R.color.green
-            )
-
-            val colorResId = colorMap[cont.color] ?: R.color.black
-            val colorInt = ContextCompat.getColor(contexto!!, colorResId)
-
-            colorView.setBackgroundColor(colorInt)
+            val colorResId = try {
+                Color.parseColor(cont.color)
+            } catch (e: IllegalArgumentException) {
+                Color.BLACK
+            }
+            colorView.setBackgroundColor(colorResId)
 
             name.text = cont.name
             work.text = cont.work

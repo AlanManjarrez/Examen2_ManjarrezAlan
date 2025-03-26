@@ -49,15 +49,15 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="25dp"
-        android:text="Apellido" />
+        android:text="Trabajo" />
 
     <EditText
-        android:id="@+id/etLastName"
+        android:id="@+id/etWork"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_marginLeft="30dp"
-        android:hint="Escribir Apellido"
+        android:hint="Escribir Trabajo"
         android:padding="20dp" />
 
     <TextView
